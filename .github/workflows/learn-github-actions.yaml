@@ -1,13 +1,37 @@
+# Actionsに表示されるワークフロー名
 name: learn-github-actions
+
+# 実行したワークフロー名がActionsに表示される
+# github.actor = toku-chan なので、learn-github-actions > toku-chan is learing GitHub Actions となる
 run-name: ${{ github.actor }} is learning GitHub Actions
+
+# onはどのタイミングで実行するか
+# 今回の場合は変更内容がリポジトリにpushされたときに実行している
 on: [push]
+
+# 実行時に何を行うかを記載
 jobs:
+
+  # jobの中で何を実行しているか命名している
   check-bats-version:
+
+    # jobはどのランナーで実行するか定義。今回はUbuntuの最新バージョンで実行するようにしている。
     runs-on: ubuntu-latest
+
+    # check-bats-versionで実行する内容をグループ化していて、以下の内容を順番に行うよってことっぽい
     steps:
+
+      # ランナーがこのリポジトリの内容をcheckoutしている
+      # そうしないと以下のコマンドが実行できない
       - uses: actions/checkout@v3
+
+      # ランナーに対して、指定したnodeで実行するように、nodeのinstallをさせている
       - uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '18.15.0'
+
+      # ランナーがなんのコマンドを実行するかを記載する
+      # runとすることで、そのコマンドが実行される
+      # Q: batsがなんなのかはまだ理解していない
       - run: npm install -g bats
       - run: bats -v
